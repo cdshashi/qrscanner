@@ -3,6 +3,9 @@ package cd.qrscanner.scanner
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Point
+import android.graphics.Rect
+import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.OnScaleGestureListener
@@ -15,16 +18,22 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import cd.qrscanner.utils.BeepManager
-import cd.qrscanner.config.CameraConfig
-import cd.qrscanner.config.CameraConfigFactory
-import cd.qrscanner.utils.LogUtils
 import cd.qrscanner.analyzer.AmbientLightManager
-import cd.qrscanner.analyzer.Analyzer.OnAnalyzeListener
 import cd.qrscanner.analyzer.AnalyzeResult
 import cd.qrscanner.analyzer.Analyzer
+import cd.qrscanner.analyzer.Analyzer.OnAnalyzeListener
+import cd.qrscanner.config.CameraConfig
+import cd.qrscanner.config.CameraConfigFactory
+import cd.qrscanner.utils.BeepManager
+import cd.qrscanner.utils.LogUtils
+import com.google.android.gms.tasks.Task
 import com.google.common.util.concurrent.ListenableFuture
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.Executors
+
 
 class BaseCameraScan<T>(
     private val mContext: Context,
@@ -181,6 +190,7 @@ class BaseCameraScan<T>(
                 )
                 imageAnalysis.setAnalyzer(Executors.newSingleThreadExecutor()) { image: ImageProxy ->
                     if (isAnalyze && !isAnalyzeResult && mAnalyzer != null) {
+                        mAnalyzer!!.analyzeBarCode(image, mOnAnalyzeListener!!)
                         mAnalyzer!!.analyze(image, mOnAnalyzeListener!!)
                     }
                     image.close()

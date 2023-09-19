@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.graphics.Point
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -118,19 +119,23 @@ open class QRCodeActivity : AppCompatActivity(), CameraScan.OnScanResultCallback
             height = frameMetadata.width
         }
 
-        if (result is QRCodeAnalyzeResult) {
-            if(result.result.size == 1) {
-                val intent = Intent()
-                intent.putExtra(CameraScan.SCAN_RESULT, result.result[0])
-                setResult(RESULT_OK, intent)
-                finish()
-            }
-        } else {
-            val intent = Intent()
-            intent.putExtra(CameraScan.SCAN_RESULT, result.result[0])
-            setResult(RESULT_OK, intent)
-            finish()
-        }
+        Handler().postDelayed({
+            mCameraScan?.setAnalyzeImage(true)
+        },500)
+
+//        if (result is QRCodeAnalyzeResult) {
+//            if(result.result.size == 1) {
+//                val intent = Intent()
+//                intent.putExtra(CameraScan.SCAN_RESULT, result.result[0])
+//                setResult(RESULT_OK, intent)
+//                finish()
+//            }
+//        } else {
+//            val intent = Intent()
+//            intent.putExtra(CameraScan.SCAN_RESULT, result.result[0])
+//            setResult(RESULT_OK, intent)
+//            finish()
+//        }
     }
 
     private fun createAnalyzer(): Analyzer<List<String>> {
