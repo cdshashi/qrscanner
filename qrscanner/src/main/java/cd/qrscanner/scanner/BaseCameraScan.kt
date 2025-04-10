@@ -351,9 +351,9 @@ class BaseCameraScan<T>(
         stopCamera()
     }
 
-    override fun bindFlashlightView(flashlightView: View?): CameraScan<*> {
+    override fun bindFlashlightView(flashlightView: View?,enableSensor : Boolean): CameraScan<*> {
         this.flashlightView = flashlightView
-        if (mAmbientLightManager != null) {
+        if (mAmbientLightManager != null  && enableSensor) {
             mAmbientLightManager!!.isLightSensorEnabled = flashlightView != null
         }
         return this
