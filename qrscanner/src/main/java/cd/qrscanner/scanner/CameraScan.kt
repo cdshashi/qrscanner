@@ -32,7 +32,7 @@ abstract class CameraScan<T> : ICamera {
     abstract fun setVibrate(vibrate: Boolean): CameraScan<*>?
     abstract fun setPlayBeep(playBeep: Boolean): CameraScan<*>?
     abstract fun setOnScanResultCallback(callback: OnScanResultCallback<List<String>>): CameraScan<*>?
-    abstract fun bindFlashlightView(v: View?): CameraScan<*>?
+    abstract fun bindFlashlightView(v: View?,enableSensor : Boolean = true): CameraScan<*>?
     abstract fun setDarkLightLux(lightLux: Float): CameraScan<*>?
     abstract fun setBrightLightLux(lightLux: Float): CameraScan<*>?
 
