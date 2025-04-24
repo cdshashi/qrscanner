@@ -355,6 +355,10 @@ class BaseCameraScan<T>(
         this.flashlightView = flashlightView
         if (mAmbientLightManager != null ) {
             mAmbientLightManager!!.isLightSensorEnabled = (flashlightView != null && enableSensor)
+            if(!enableSensor){
+                 mAmbientLightManager!!.unregister()
+                 flashlightView!!.visibility = View.VISIBLE
+            }
         }
         return this
     }
