@@ -35,6 +35,7 @@ public final class QRCodeDetector {
     private static void initWeChatQRCode(Context context) {
         try {
             String saveDirPath = getExternalFilesDir(context, MODEL_DIR);
+            if (saveDirPath != null) {
             String[] models = new String[]{DETECT_PROTOTXT, DETECT_CAFFEMODEL, SR_PROTOTXT, SR_CAFFEMODEL};
 
             File saveDir = new File(saveDirPath);
@@ -73,21 +74,39 @@ public final class QRCodeDetector {
                     saveDirPath + File.separatorChar + models[2],
                     saveDirPath + File.separatorChar + models[3]);
             Log.d(TAG, "WeChatQRCode loaded successfully");
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        } catch (Throwable e) {
+            // e.printStackTrace();
         }
     }
 
-    private static String getExternalFilesDir(Context context, String path) {
+    // private static String getExternalFilesDir(Context context, String path) {
+    //     File[] files = context.getExternalFilesDirs(path);
+    //     if (files != null && files.length > 0) {
+    //         return files[0].getAbsolutePath();
+    //     }
+    //     File file = context.getExternalFilesDir(path);
+    //     if(file == null) {
+    //         file = new File(context.getFilesDir(), path);
+    //     }
+    //     return file.getAbsolutePath();
+    // }
+
+ private static String getExternalFilesDir(Context context, String path) {
         File[] files = context.getExternalFilesDirs(path);
-        if (files != null && files.length > 0) {
+        if (files != null && files.length > 0 && files[0] != null) {
             return files[0].getAbsolutePath();
         }
+
         File file = context.getExternalFilesDir(path);
-        if(file == null) {
-            file = new File(context.getFilesDir(), path);
+        if (file == null) {
+            File internalDir = context.getFilesDir();
+            if (internalDir != null) {
+                file = new File(internalDir, path);
+            }
         }
-        return file.getAbsolutePath();
+
+        return (file != null) ? file.getAbsolutePath() : null;
     }
 
 
