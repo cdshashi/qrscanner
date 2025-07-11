@@ -3,29 +3,26 @@ package cd.qrscanner.scanner;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
-
-import org.opencv.OpenCV;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
-import org.opencv.wechat_qrcode.WeChatQRCode;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import cd.qrscanner.OpenCV;
+
 public final class QRCodeDetector {
 
-    private static final String TAG = "QRCodeDetector";
-
+    private static final String TAG = "CDQRCodeDetector";
     private static final String MODEL_DIR = "models";
     private static final String DETECT_PROTOTXT = "detect.prototxt";
     private static final String DETECT_CAFFEMODEL = "detect.caffemodel";
     private static final String SR_PROTOTXT = "sr.prototxt";
     private static final String SR_CAFFEMODEL = "sr.caffemodel";
 
-    private static WeChatQRCode sWeChatQRCode;
+//    private static final CDQRCodeDetector detector = new CDQRCodeDetector();
 
     public static void init(Context context) {
         OpenCV.initAsync(context);
@@ -68,29 +65,11 @@ public final class QRCodeDetector {
                     Log.d(TAG, "file: " + saveFile.getAbsolutePath());
                 }
             }
-            sWeChatQRCode = new WeChatQRCode(
-                    saveDirPath + File.separatorChar + models[0],
-                    saveDirPath + File.separatorChar + models[1],
-                    saveDirPath + File.separatorChar + models[2],
-                    saveDirPath + File.separatorChar + models[3]);
-            Log.d(TAG, "WeChatQRCode loaded successfully");
         }
         } catch (Throwable e) {
             // e.printStackTrace();
         }
     }
-
-    // private static String getExternalFilesDir(Context context, String path) {
-    //     File[] files = context.getExternalFilesDirs(path);
-    //     if (files != null && files.length > 0) {
-    //         return files[0].getAbsolutePath();
-    //     }
-    //     File file = context.getExternalFilesDir(path);
-    //     if(file == null) {
-    //         file = new File(context.getFilesDir(), path);
-    //     }
-    //     return file.getAbsolutePath();
-    // }
 
  private static String getExternalFilesDir(Context context, String path) {
         File[] files = context.getExternalFilesDirs(path);
@@ -125,12 +104,13 @@ public final class QRCodeDetector {
 
 
     public static List<String> detectAndDecode(Mat img) {
-        return sWeChatQRCode.detectAndDecode(img);
+        return new CDQRCodeDetector().detectAndDecode(img);
     }
 
 
     public static List<String> detectAndDecode(Mat img, List<Mat> points) {
-        return sWeChatQRCode.detectAndDecode(img, points);
+        return new CDQRCodeDetector().detectAndDecode(img, points);
     }
+
 
 }

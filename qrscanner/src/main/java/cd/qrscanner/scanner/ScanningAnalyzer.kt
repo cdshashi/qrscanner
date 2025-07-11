@@ -143,13 +143,12 @@ class ScanningAnalyzer @JvmOverloads constructor(private val isOutputVertices: B
         if (isOutputVertices) {
             val points: List<Mat> = ArrayList()
             val result = QRCodeDetector.detectAndDecode(bgrMat, points)
-            bgrMat.release()
             if (result != null && result.isNotEmpty()) {
                 return QRCodeAnalyzeResult(nv21, ImageFormat.NV21, frameMetadata, result, points)
             }
         } else {
             val result = QRCodeDetector.detectAndDecode(bgrMat)
-            bgrMat.release()
+
             if (result != null && result.isNotEmpty()) {
                 return QRCodeAnalyzeResult(nv21, ImageFormat.NV21, frameMetadata, result)
             }
