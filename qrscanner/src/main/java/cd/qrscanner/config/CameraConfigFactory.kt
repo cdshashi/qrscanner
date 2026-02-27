@@ -5,9 +5,9 @@ import androidx.camera.core.CameraSelector
 import cd.qrscanner.analyzer.AspectRatioCameraConfig
 
 class CameraConfigFactory{
-
-    companion object {
-        fun createDefaultCameraConfig(context: Context, lensFacing: Int): CameraConfig {
+     companion object {
+        fun createDefaultCameraConfig(context: Context, lensFacing: Int = CameraSelector.LENS_FACING_BACK): CameraConfig {
+            val resolvedLensFacing = if (lensFacing >= 0) lensFacing else CameraSelector.LENS_FACING_BACK
             val displayMetrics = context.resources.displayMetrics
             val size = Math.min(displayMetrics.widthPixels, displayMetrics.heightPixels)
             return if (size > ResolutionCameraConfig.IMAGE_QUALITY_720P) {
@@ -17,18 +17,14 @@ class CameraConfigFactory{
                 }
                 object : ResolutionCameraConfig(context, imageQuality) {
                     override fun options(builder: CameraSelector.Builder): CameraSelector {
-                        if (lensFacing >= 0) {
-                            builder.requireLensFacing(lensFacing)
-                        }
+                        builder.requireLensFacing(resolvedLensFacing)
                         return super.options(builder)
                     }
                 }
             } else {
                 object : AspectRatioCameraConfig(context) {
                     override fun options(builder: CameraSelector.Builder): CameraSelector {
-                        if (lensFacing >= 0) {
-                            builder.requireLensFacing(lensFacing)
-                        }
+                        builder.requireLensFacing(resolvedLensFacing)
                         return super.options(builder)
                     }
                 }
